@@ -1,6 +1,7 @@
 # Android device tree for benesse TAB-A03-BR3
 ## TAB-A04-BR3(a04br3)用の簡易的なtwrpデバイスツリーです。
 
+#### bootable/recoveryはsource内に上書きして使ってください。
 
 ```
 #
