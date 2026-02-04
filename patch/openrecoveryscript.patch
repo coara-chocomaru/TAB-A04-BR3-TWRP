@@ -1,4 +1,4 @@
---- openrecoveryscript.cpp.bak	2026-02-04 07:24:46.031963279 +0000
+--- openrecoveryscript.cpp	2026-02-04 07:24:46.031963279 +0000
 +++ openrecoveryscript.cpp	2026-02-04 07:24:46.031963279 +0000
 @@ -1,4 +1,6 @@
  /*
