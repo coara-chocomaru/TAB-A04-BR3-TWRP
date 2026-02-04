@@ -1,1 +1,64 @@
-
+--- twrp.cpp	2026-02-04 07:24:46.033963257 +0000
++++ twrp.cpp	2026-02-04 07:24:46.033963257 +0000
+@@ -1,4 +1,7 @@
+ /*
++#include <string>
++#include <cstdlib>
++#include <cerrno>
+ 		TWRP is free software: you can redistribute it and/or modify
+ 		it under the terms of the GNU General Public License as published by
+ 		the Free Software Foundation, either version 3 of the License, or
+@@ -253,6 +256,25 @@
+ 				} else
+ 					LOGERR("argument error specifying zip file\n");
+ 			} else if (*argptr == 'w') {
++    if (len == 9) { 
++        int reason_arg = index + 1; 
++        bool inserted_format = false; 
++        if (reason_arg < argc && strncmp(argv[reason_arg], "--reason=", 9) == 0) { 
++            std::string reason_str = std::string(argv[reason_arg] + 9); 
++            gui_print("Detected reason: %s. Forcing format before wipe.\n", reason_str.c_str()); 
++            if (reason_str == "fs_mgr_mount_all" || reason_str == "wipe_data_via_recovery") { 
++                OpenRecoveryScript::Insert_ORS_Command("format data\n"); 
++                inserted_format = true; 
++            } 
++            index = reason_arg;  /* reason引数をスキップして重複防止 */ 
++        } 
++        if (!inserted_format) { 
++            OpenRecoveryScript::Insert_ORS_Command("format data\n"); 
++        } 
++        if (!OpenRecoveryScript::Insert_ORS_Command("wipe data\n")) { 
++            break; 
++        } 
++    }
+ 				if (len == 9) {
+ 					if (!OpenRecoveryScript::Insert_ORS_Command("wipe data\n"))
+ 						break;
+@@ -287,11 +309,27 @@
+ 			}
+ 		}
+ 		printf("\n");
++    PartitionManager.Mount_By_Path("/data", true); 
++    TWPartition* data = PartitionManager.Find_Partition_By_Path("/data"); 
++    if (data && !data->Is_Mounted()) { 
++        gui_print("Boot-time /data mount failed (Invalid argument). Forcing format...\n"); 
++        PartitionManager.Format_Data(); 
++        PartitionManager.Wipe_By_Path("/data"); 
++        PartitionManager.Mount_By_Path("/data", true); 
++    }
+ 	}
+ 
+ 	if (crash_counter == 0) {
+ 		property_list(Print_Prop, NULL);
+ 		printf("\n");
++    PartitionManager.Mount_By_Path("/data", true); 
++    TWPartition* data = PartitionManager.Find_Partition_By_Path("/data"); 
++    if (data && !data->Is_Mounted()) { 
++        gui_print("Boot-time /data mount failed (Invalid argument). Forcing format...\n"); 
++        PartitionManager.Format_Data(); 
++        PartitionManager.Wipe_By_Path("/data"); 
++        PartitionManager.Mount_By_Path("/data", true); 
++    }
+ 	} else {
+ 		printf("twrp.crash_counter=%d\n", crash_counter);
+ 	}
