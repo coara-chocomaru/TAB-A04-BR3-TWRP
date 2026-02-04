@@ -1,0 +1,164 @@
+#
+# Copyright (C) 2024 The Android Open Source Project
+# Copyright (C) 2024 SebaUbuntu's TWRP device tree generator
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+DEVICE_PATH := device/sts/a04br3
+BOARD_VENDOR := sts
+BOARD_DEVICE := a04br3 
+BOARD_SUPPRESS_SECURE_ERASE := true
+
+# disable
+TARGET_NO_TELEPHONY := true
+BOARD_GPS_LIBRARIES := false
+BOARD_HAS_GPS := false
+
+
+# mtk
+BOARD_HAS_MTK_HARDWARE := true
+BOARD_USES_MTK_HARDWARE := true
+MTK_HARDWARE := true
+
+# ota用
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    ro.build.product=TAB-A04-BR3 \
+    ro.product.board=TAB-A04-BR3 \
+    ro.product.device=TAB-A04-BR3
+    ro.build.characteristics=tablet \
+    ro.target.product=tablet \
+    ro.sf.hwrotation=270 \
+    ro.secure=0 \
+    ro.adb.secure=0 \
+    ro.debuggable=1 \
+    persist.sys.usb.config=adb \
+    sys.usb.config=adb \
+    security.perf_harden=0 \
+    ro.build.selinux=0
+
+# For building with minimal manifest
+ALLOW_MISSING_DEPENDENCIES := true
+
+# Architecture
+TARGET_BUILD_64BIT := true
+TARGET_BOARD_SUFFIX := _64
+TARGET_SUPPORTS_64_BIT_APPS := true
+TARGET_IS_64_BIT := true
+TARGET_USES_64_BIT_BINDER := true
+TARGET_ARCH := arm64
+TARGET_ARCH_VARIANT := armv8-a
+TARGET_CPU_ABI := arm64-v8a
+TARGET_CPU_ABI2 := 
+TARGET_CPU_VARIANT := cortex-a53
+TARGET_CPU_VARIANT_RUNTIME := generic
+TARGET_2ND_ARCH := arm
+TARGET_2ND_ARCH_VARIANT := armv7-a-neon
+TARGET_2ND_CPU_ABI := armeabi-v7a
+TARGET_2ND_CPU_ABI2 := armeabi
+TARGET_2ND_CPU_VARIANT := cortex-a53
+TARGET_2ND_CPU_VARIANT_RUNTIME := generic
+TARGET_CPU_ABI_LIST_64_BIT := $(TARGET_CPU_ABI)
+TARGET_CPU_ABI_LIST_32_BIT := $(TARGET_2ND_CPU_ABI),$(TARGET_2ND_CPU_ABI2)
+TARGET_CPU_ABI_LIST := $(TARGET_CPU_ABI_LIST_64_BIT),$(TARGET_CPU_ABI_LIST_32_BIT)
+TARGET_CPU_SMP := true
+ENABLE_CPUSETS := true
+ENABLE_SCHEDBOOST := true
+ARCH_ARM_HAVE_TLS_REGISTER := true
+
+# Bootloader
+TARGET_BOOTLOADER_BOARD_NAME := a04br3
+TARGET_NO_FACTORYIMAGE :=true
+TARGET_NO_BOOTLOADER := true
+
+# Display
+TARGET_SCREEN_DENSITY := 140
+TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
+TW_SECONDARY_BRIGHTNESS_PATH := /sys/devices/platform/leds-mt65xx/leds/lcd-backlight/brightness
+# TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/mt_usb/musb-hdrc.0.auto/gadget/lun%d/file
+# TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun/file
+TW_MAX_BRIGHTNESS := 255
+TW_DEFAULT_BRIGHTNESS := 120
+DEVICE_RESOLUTION := 1280x800
+TARGET_SCREEN_HEIGHT := 800
+TARGET_SCREEN_WIDTH := 1280
+TARGET_OTA_ASSERT_DEVICE := TAB-A04-BR3,a04br3
+
+
+# Kernel
+BOARD_KERNEL_BASE := 0x40078000
+BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive
+BOARD_KERNEL_PAGESIZE := 2048
+BOARD_RAMDISK_OFFSET := 0x03f88000
+BOARD_KERNEL_TAGS_OFFSET := 0x0df88000
+BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
+BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
+BOARD_KERNEL_IMAGE_NAME := Image
+TARGET_KERNEL_CONFIG := a04br3_defconfig
+TARGET_KERNEL_SOURCE := kernel/sts/a04br3
+
+# Kernel - prebuilt
+TARGET_FORCE_PREBUILT_KERNEL := true
+ifeq ($(TARGET_FORCE_PREBUILT_KERNEL),true)
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
+endif
+
+# Partitions
+BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)
+BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216 
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 15728640 
+BOARD_HAS_LARGE_FILESYSTEM := true
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2147483648
+BOARD_SYSTEMIMAGE_PARTITION_TYPE := ext4
+BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
+TARGET_USES_MKE2FS := true
+TARGET_COPY_OUT_VENDOR := vendor
+BOARD_USES_VENDORIMAGE := false
+
+# Platform
+TARGET_BOARD_PLATFORM := mt8167
+TARGET_BOARD_PLATFORM_GPU := PowerVR Rogue GE8300
+
+# Recovery
+TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_USE_F2FS := true
+RECOVERY_SDCARD_ON_DATA := true
+LZMA_RAMDISK_TARGETS := recovery
+
+# Security patch level
+VENDOR_SECURITY_PATCH := 2021-08-01
+
+# Hack: prevent anti rollback
+PLATFORM_SECURITY_PATCH := 2099-12-31
+VENDOR_SECURITY_PATCH := 2099-12-31
+PLATFORM_VERSION := 16.1.0
+
+# TWRP Configuration
+TW_THEME := portrait_mdpi
+RECOVERY_TOUCHSCREEN_SWAP_XY := true
+RECOVERY_TOUCHSCREEN_FLIP_Y := true
+TW_CUSTOM_CPU_TEMP_PATH := /sys/devices/virtual/thermal/thermal_zone2/temp
+TW_EXTRA_LANGUAGES := false
+TW_USE_INPUT_EVENTS := true
+TW_INPUT_BLACKLIST := "hbtp_vm"
+TW_SCREEN_BLANK_ON_BOOT := true
+# TW_NO_SCREEN_TIMEOUT := true
+TW_USE_TOOLBOX := true
+TW_EXCLUDE_BASH := true
+TW_EXCLUDE_NANO := true
+TW_EXCLUDE_LSOF := false
+TW_EXCLUDE_LZMA := false
+TW_EXCLUDE_SED := true
+TW_EXCLUDE_TAR := false
+TW_EXCLUDE_ENCRYPTED_BACKUPS := true
+TW_EXCLUDE_MTP := true
+TW_EXCLUDE_TWRPAPP := true
+TW_EXCLUDE_PYTHON := true
+TW_NO_EXFAT_FUSE := false
+TW_NO_BZIP2 := true
+TW_NO_USB_STORAGE := true
+TW_DEFAULT_LANGUAGE := en
+TW_EXCLUDE_AWK := false
+TW_EXCLUDE_GZIP := false
+TW_EXCLUDE_XZ := true
