@@ -100,8 +100,11 @@ jobs:
           curl -L -o kernel.zip https://github.com/coara-chocomaru/TAB-A04-BR3-TWRP/releases/download/TAB-A04-BR3-TWRP/source_android_kernel_Benesse_a04br3.zip
           unzip -q kernel.zip
           mkdir -p workspace/kernel/sts/a04br3
-          ls -R android_kernel_Benesse_a04br3/
-          cp -r android_kernel_Benesse_a04br3/android_kernel_Benesse_a04br3/* workspace/kernel/sts/a04br3/
+          if [ -d "android_kernel_Benesse_a04br3" ]; then
+            cp -r android_kernel_Benesse_a04br3/* workspace/kernel/sts/a04br3/
+          else
+            cp -r * workspace/kernel/sts/a04br3/
+          fi
           rm -rf android_kernel_Benesse_a04br3 kernel.zip
 
       - name: Patch TWRP source for custom command support (TWRP 7.1)
@@ -128,7 +131,7 @@ jobs:
                           OpenRecoveryScript::Insert_ORS_Command("format data\\n"); \
                           inserted_format = true; \
                       } \
-                      index = reason_arg;  /* reason引数をスキップして重複防止 */ \
+                      index = reason_arg; \
                   } \
                   if (!inserted_format) { \
                       OpenRecoveryScript::Insert_ORS_Command("format data\\n"); \
@@ -191,14 +194,13 @@ jobs:
           export ALLOW_MISSING_DEPENDENCIES=true
           lunch ${{ env.MAKEFILE_NAME }}-eng && make clean && make ${{ env.BUILD_TARGET }}image -j$(nproc --all)
 
-      # ===== 新規追加: カーネルヘッダーの収集とアップロード =====
       - name: Collect kernel headers from build output
         working-directory: ${{ steps.pwd.outputs.workspace-folder }}
         run: |
           set -e
           KERNEL_OBJ="out/target/product/${{ env.DEVICE_NAME }}/obj/KERNEL_OBJ"
           HEADER_SRC="$KERNEL_OBJ/usr"
-          HEADER_DST="device/mediatek/mt8167/kernel-headers"
+          HEADER_DST="device/mediatek/mt8168/kernel-headers"
 
           if [ ! -d "$HEADER_SRC" ]; then
             echo "Error: Kernel header directory $HEADER_SRC not found!"
@@ -209,7 +211,7 @@ jobs:
 
           mkdir -p "$HEADER_DST/include"
           cp -r "$HEADER_SRC/include"/* "$HEADER_DST/include/"
-          
+
           if [ -d "$KERNEL_OBJ/include/dt-bindings" ]; then
             cp -r "$KERNEL_OBJ/include/dt-bindings" "$HEADER_DST/include/"
           fi
@@ -220,7 +222,7 @@ jobs:
       - name: Package kernel headers
         working-directory: ${{ steps.pwd.outputs.workspace-folder }}
         run: |
-          zip -r kernel-headers.zip device/mediatek/mt8167/kernel-headers/
+          zip -r kernel-headers.zip device/mediatek/mt8168/kernel-headers/
 
       - name: Upload kernel headers artifact
         uses: actions/upload-artifact@v4
