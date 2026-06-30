@@ -100,7 +100,8 @@ jobs:
           curl -L -o kernel.zip https://github.com/coara-chocomaru/TAB-A04-BR3-TWRP/releases/download/TAB-A04-BR3-TWRP/source_android_kernel_Benesse_a04br3.zip
           unzip -q kernel.zip
           mkdir -p workspace/kernel/sts/a04br3
-          cp -r android_kernel_Benesse_a04br3/kernel/* workspace/kernel/sts/a04br3/
+          ls -R android_kernel_Benesse_a04br3/
+          cp -r android_kernel_Benesse_a04br3/android_kernel_Benesse_a04br3/* workspace/kernel/sts/a04br3/
           rm -rf android_kernel_Benesse_a04br3 kernel.zip
 
       - name: Patch TWRP source for custom command support (TWRP 7.1)
