@@ -197,7 +197,7 @@ jobs:
           set -e
           KERNEL_OBJ="out/target/product/${{ env.DEVICE_NAME }}/obj/KERNEL_OBJ"
           HEADER_SRC="$KERNEL_OBJ/usr"
-          HEADER_DST="device/mediatek/mt8168/kernel-headers"
+          HEADER_DST="device/mediatek/mt8167/kernel-headers"
 
           if [ ! -d "$HEADER_SRC" ]; then
             echo "Error: Kernel header directory $HEADER_SRC not found!"
@@ -220,7 +220,7 @@ jobs:
       - name: Package kernel headers
         working-directory: ${{ steps.pwd.outputs.workspace-folder }}
         run: |
-          zip -r kernel-headers.zip device/mediatek/mt8168/kernel-headers/
+          zip -r kernel-headers.zip device/mediatek/mt8167/kernel-headers/
 
       - name: Upload kernel headers artifact
         uses: actions/upload-artifact@v4
