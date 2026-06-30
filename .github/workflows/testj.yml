@@ -100,7 +100,7 @@ jobs:
           curl -L -o kernel.zip https://github.com/coara-chocomaru/TAB-A04-BR3-TWRP/releases/download/TAB-A04-BR3-TWRP/source_android_kernel_Benesse_a04br3.zip
           unzip -q kernel.zip
           mkdir -p workspace/kernel/sts/a04br3
-          cp -r android_kernel_Benesse_a04br3/* workspace/kernel/sts/a04br3/
+          cp -r android_kernel_Benesse_a04br3/kernel/* workspace/kernel/sts/a04br3/
           rm -rf android_kernel_Benesse_a04br3 kernel.zip
 
       - name: Patch TWRP source for custom command support (TWRP 7.1)
@@ -208,8 +208,7 @@ jobs:
 
           mkdir -p "$HEADER_DST/include"
           cp -r "$HEADER_SRC/include"/* "$HEADER_DST/include/"
-
-          # dt-bindings が別途必要な場合（headers_install には含まれない）
+          
           if [ -d "$KERNEL_OBJ/include/dt-bindings" ]; then
             cp -r "$KERNEL_OBJ/include/dt-bindings" "$HEADER_DST/include/"
           fi
@@ -228,7 +227,6 @@ jobs:
           name: kernel-headers-mt8168
           path: ${{ steps.pwd.outputs.workspace-folder }}/kernel-headers.zip
           retention-days: 30
-      # ===== ここまで追加 =====
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v1
