@@ -95,18 +95,10 @@ jobs:
           mkdir -p workspace/${{ env.DEVICE_PATH }}
           ls | grep -v workspace | xargs -I{} mv {} workspace/${{ env.DEVICE_PATH }}
 
-      - name: Download and extract kernel source
+      - name: Clone kernel source
         run: |
-          curl -L -o kernel.zip https://github.com/coara-chocomaru/TAB-A04-BR3-TWRP/releases/download/TAB-A04-BR3-TWRP/source_android_kernel_Benesse_a04br3.zip
-          unzip -q kernel.zip
-          mkdir -p workspace/kernel/sts/a04br3
-          if [ -d "android_kernel_Benesse_a04br3" ]; then
-            cp -r android_kernel_Benesse_a04br3/* workspace/kernel/sts/a04br3/
-          else
-            cp -r * workspace/kernel/sts/a04br3/
-          fi
-          rm -rf android_kernel_Benesse_a04br3 kernel.zip
-
+          git clone --depth=1 -b main https://github.com/coara-chocomaru/android_kernel_sts_a04br3-test workspace/kernel/sts/a04br3
+          
       - name: Patch TWRP source for custom command support (TWRP 7.1)
         working-directory: workspace
         run: |
